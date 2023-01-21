@@ -1,9 +1,12 @@
+#include "IEEE754_binary_encoder.h"
+
 #include <math.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "float.h"
+#include <float.h>
 
-void IEE754_binary64_encode( double x, char out[8] ){
+
+void IEE754_binary64_encode( double x, uint8_t out[8] ){
   bool sign = x < 0;
   uint16_t exponent;
   uint64_t fraction;
@@ -36,7 +39,7 @@ void IEE754_binary64_encode( double x, char out[8] ){
   out[7] =     fraction         & 0xFF;
 }
 
-double IEE754_binary64_decode( char out[8] ){
+double IEE754_binary64_decode( uint8_t out[8] ){
   bool sign = out[0] & 0x80;
   uint16_t exponent = ( ( out[0] << 4 ) & 0x7F0 )
                     | ( ( out[1] >> 4 ) & 0x0F );
@@ -51,15 +54,15 @@ double IEE754_binary64_decode( char out[8] ){
   double frac = (double)fraction / ( (uint64_t)2<<52 );
   if( exponent == 0x7FF ){
     if( fraction == (uint64_t)1<<52 ){ // Infinity
-      return sign ? -1.0/0.0 : 1.0/0.0;
+      return sign ? -HUGE_VALL : HUGE_VALL;
     }else{ // NaN
-      return sign ? 0.0/0.0 : -(0.0/0.0);
+      return sign ? NAN : -NAN;
     }
   }
   return ldexp( frac, exponent-1022 ) * ( sign ? -1 : 1 );
 }
 
-void IEE754_binary32_encode( float x, char out[4] ){
+void IEE754_binary32_encode( float x, uint8_t out[4] ){
   bool sign = x < 0;
   uint8_t exponent;
   uint32_t fraction;
@@ -88,7 +91,7 @@ void IEE754_binary32_encode( float x, char out[4] ){
   out[3] =     fraction         & 0xFF;
 }
 
-float IEE754_binary32_decode( char out[4] ){
+float IEE754_binary32_decode( uint8_t out[4] ){
   bool sign = out[0] & 0x80;
   uint8_t exponent = ( ( out[0] << 1 ) & 0xFE )
                    | ( ( out[1] >> 7 ) & 0x01 );
@@ -99,9 +102,9 @@ float IEE754_binary32_decode( char out[4] ){
   float frac = (float)fraction / ( (uint32_t)2<<23 );
   if( exponent == 0xFF ){
     if( fraction == (uint32_t)1<<23 ){ // Infinity
-      return sign ? -1.0/0.0 : 1.0/0.0;
+      return sign ? -HUGE_VALF : HUGE_VALF;
     }else{ // NaN
-      return sign ? 0.0/0.0 : -(0.0/0.0);
+      return sign ? NAN : -NAN;
     }
   }
   return ldexp( frac, exponent-126 ) * ( sign ? -1 : 1 );

@@ -1,8 +1,10 @@
 #include <cstdio>
 #include <cstdint>
 
-#define RED "\e[0;31m"
-#define NC "\e[0m"
+#include "IEEE754_binary_encoder.h"
+
+#define RED "\x1B""[0;31m"
+#define NC "\x1B""[0m"
 
 int64_t add(int32_t a, int32_t b)
 {
@@ -20,23 +22,28 @@ bool test1()
     return add(INT32_MAX,1) == (1ULL << 31);
 }
 
+bool IEE754_binary32_encode_TEST()
+{
+    float testFloat = 1.23f;
+    uint8_t testbuffer[sizeof(float)] = {0};
+
+    IEE754_binary32_encode(testFloat, testbuffer);
+
+    return IEE754_binary32_decode(testbuffer) == testFloat;
+}
+
 int main(void)
 {
-    printf("Hello world!\n");
+    printf("Testing IEEE754_binary_encoder...\n");
 
-    printf("1+1=%lld\n",add(1,1));
-
-    if (!test0())
+    if (!IEE754_binary32_encode_TEST())
     {
-        fprintf(stderr, RED "[ERROR]" NC ": test0() failed!\n");
+        fprintf(stderr, RED "[ERROR]" NC ": IEE754_binary32_encode_TEST() failed!\n");
         return -1; // Error: Process completed with exit code 255.
     }
-
-    
-    if (!test1())
+    else
     {
-        fprintf(stderr, RED "[ERROR]" NC ": test1() failed!\n");
-        return -1; // Error: Process completed with exit code 255.
+        printf("IEE754_binary32_encode_TEST() passed\n");
     }
 
     return 0;
