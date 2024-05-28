@@ -2,6 +2,7 @@
 #include <cstdint>
 
 #include "IEEE754_binary_encoder.h"
+#include <float.h>
 
 #define RED   "\033[0;31m"
 #define GREEN "\033[0;32m"
@@ -25,7 +26,7 @@ bool test1()
 
 bool IEE754_binary32_encode_TEST()
 {
-    float testFloat = 1.23f;
+    float testFloat = FLT_TRUE_MIN;//1.23f;
     uint8_t testbuffer[sizeof(float)] = {0};
 
     IEE754_binary32_encode(testFloat, testbuffer);
