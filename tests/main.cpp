@@ -3,8 +3,9 @@
 
 #include "IEEE754_binary_encoder.h"
 
-#define RED "\x1B""[0;31m"
-#define NC "\x1B""[0m"
+#define RED   "\033[0;31m"
+#define GREEN "\033[0;32m"
+#define NC    "\033[0m"
 
 int64_t add(int32_t a, int32_t b)
 {
@@ -43,7 +44,7 @@ int main(void)
     }
     else
     {
-        printf("IEE754_binary32_encode_TEST() passed\n");
+        printf(GREEN "[SUCCESS]" NC ": IEE754_binary32_encode_TEST() succeeded!\n");
     }
 
     return 0;
