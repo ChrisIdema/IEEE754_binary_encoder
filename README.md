@@ -1,10 +1,11 @@
 # IEEE754_binary_encoder
-A C library for converting float and double values to binary
+[![build and test](https://github.com/ChrisIdema/IEEE754_binary_encoder/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/ChrisIdema/IEEE754_binary_encoder/actions/workflows/build.yml)
+
+A portable C library for serializing/deserializing float and double values.
+Uses standard functions instead of making assumptions about the platform's binary format (endianness etc.)
 
 Functions
 ---------
-
-It contains the following function prototypes:
 
 ```c
 void IEE754_binary64_encode( double, char[8] );
@@ -16,5 +17,10 @@ float IEE754_binary32_decode( char[4] );
 Limitations
 -----------
 
-Subnormal floating point values (values really close to zero) are truncated to zero for simplicity reasons.
-I may change this someday.
+Signaling NaN is turned to quiet NaN. Payloads of NaN are not preserved. Signbit of NaN is preserved.
+
+Todo
+----
+* add shortcut for platforms that have known binary format and endianness
+* implement arbitrary floating point size (custom mantissa and exponent sizes, but smaller than double)
+* NaN payload? Who uses that?
