@@ -56,13 +56,17 @@ static uint16_t rand15()
 	return 	rand() & 0x7FFF;
 }
 
-static void print_byte_array(const uint8_t* buffer, size_t size)
+static void print_byte_array(const uint8_t* buffer, size_t size, bool line_ending)
 {
     while(size)
     {
         if(size == 1)
         {
             printf("%02X", *buffer);
+            if(line_ending)
+            {
+                puts("");
+            }
         }
         else
         {
@@ -98,8 +102,7 @@ bool IEE754_binary32_special_cases_TEST()
         {
             in = sign ? -in_array[i] : in_array[i];
             IEE754_binary32_encode(in, buffer);
-            //print_byte_array(buffer, sizeof(buffer));
-            //printf("\n");
+            //print_byte_array(buffer, sizeof(buffer), true);
             out = IEE754_binary32_decode(buffer);
             compare = float32_strict_compare(in, out);
             printf("%+.*g %c= %+.*g\n", FLT_DECIMAL_DIG - 1, out, compare ? '=' : '!' , FLT_DECIMAL_DIG - 1, in );
@@ -146,7 +149,7 @@ bool IEE754_binary32_fuzzing_TEST()
 
         IEE754_binary32_encode(f, out);
 
-        // if (i==500) // test fail
+        // if (i==100) // test fail
         // {
         // 	out[0] ^= 0xff;
         // }
@@ -159,9 +162,8 @@ bool IEE754_binary32_fuzzing_TEST()
             if (!compare)
             {					
                 printf("NaN decode failed\n");
-                printf("%g\n", f);
-                print_byte_array(buffer, sizeof(buffer));
-                printf("\n");
+                printf("%g ", f);
+                print_byte_array(buffer, sizeof(buffer), true);
             }
             else
             {
@@ -172,8 +174,7 @@ bool IEE754_binary32_fuzzing_TEST()
                 if (!compare)
                 {
                     printf("NaN encode failed");
-                    print_byte_array(out, sizeof(out));
-                    printf("\n");
+                    print_byte_array(out, sizeof(out), true);
                 }
             }
         }
@@ -183,10 +184,9 @@ bool IEE754_binary32_fuzzing_TEST()
 
             if (!compare)
             {		             
-                print_byte_array(buffer, sizeof(buffer));               
+                print_byte_array(buffer, sizeof(buffer), false);               
                 printf(" != ");
-                print_byte_array(out, sizeof(out));
-                printf("\n");
+                print_byte_array(out, sizeof(out), true);
             }	
         }
 
@@ -227,8 +227,7 @@ bool IEE754_binary64_special_cases_TEST()
             //const uint64_t* ptr = (const uint64_t*)&in;
             //printf("%016llX\n",*ptr);
             IEE754_binary64_encode(in, buffer);          
-            //print_byte_array(buffer, sizeof(buffer));
-            //printf("\n");            
+            //print_byte_array(buffer, sizeof(buffer), true);       
             out = IEE754_binary64_decode(buffer);
             compare = float64_strict_compare(in, out);
             //printf("%g %c= %g\n", out, compare ? '=' : '!' , in );
@@ -293,10 +292,9 @@ bool IEE754_binary64_fuzzing_TEST()
             if (!compare)
             {					
                 printf("NaN decode failed\n");
-                printf("%lg\n", d);
+                printf("%lg ", d);
                
-                print_byte_array(buffer, sizeof(buffer));
-                printf("\n");
+                print_byte_array(buffer, sizeof(buffer), true);
             }
             else
             {
@@ -307,8 +305,7 @@ bool IEE754_binary64_fuzzing_TEST()
                 if (!compare)
                 {
                     printf("NaN encode failed");
-                    print_byte_array(out, sizeof(out));
-                    printf("\n");
+                    print_byte_array(out, sizeof(out), true);
                 }
             }
         }
@@ -318,10 +315,9 @@ bool IEE754_binary64_fuzzing_TEST()
 
             if (!compare)
             {		
-                print_byte_array(buffer, sizeof(buffer));
+                print_byte_array(buffer, sizeof(buffer), false);
                 printf(" != ");
-                print_byte_array(out, sizeof(out));
-                printf("\n");
+                print_byte_array(out, sizeof(out), true);
             }	
         }
 
@@ -388,6 +384,6 @@ int main(void)
     {
         printf(GREEN "[SUCCESS]" NC ": IEE754_binary64_fuzzing_TEST() succeeded!\n");
     }
-    
+
     return res;
 }
