@@ -112,7 +112,7 @@ bool IEE754_float32_special_cases_TEST()
     #endif
     };
 
-    for(int i = 0; i < sizeof(in_array) / sizeof(in_array[0]); ++i)
+    for(uint8_t i = 0; i < sizeof(in_array) / sizeof(in_array[0]); ++i)
     {
         sign = false;
         do
@@ -234,7 +234,7 @@ bool IEE754_float64_special_cases_TEST()
     };
 
 
-    for(int i = 0; i < sizeof(in_array) / sizeof(in_array[0]); ++i)
+    for(uint8_t i = 0; i < sizeof(in_array) / sizeof(in_array[0]); ++i)
     {
         bool sign = false;
         do
