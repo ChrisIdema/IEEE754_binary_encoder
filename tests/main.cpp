@@ -8,6 +8,12 @@
 #include <cstdlib> // rand
 #include <cstring> // memcmp
 
+#if defined(_MSC_VER)
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
 using namespace std; // for std::isnan, needed in gcc
 
 #define RED   "\033[0;31m"
@@ -16,6 +22,15 @@ using namespace std; // for std::isnan, needed in gcc
 
 
 //helper functions:
+
+#if defined(_MSC_VER)
+// Sleep() expects an argument in milliseconds
+#define SLEEP(time) Sleep((time) * 1000)
+#else
+// sleep() expects an argument in seconds so use usleep
+#define SLEEP(time) usleep((time) * 1000000)
+#endif
+
 
 //nan==nan, nan!=-nan, inf==inf, inf!=-inf
 static bool float32_strict_compare(float f1, float f2)
@@ -344,8 +359,8 @@ int main(void)
     if (!IEE754_binary32_special_cases_TEST())
     {
         fflush(stdout); // flush stdout buffer before writing to stderr(unbuffered), to preserve order
+        SLEEP(0.010);
         fprintf(stderr, RED "[ERROR]" NC ": IEE754_binary32_special_cases_TEST() failed!\n");
-        fflush(stderr);
         res = -1; // Error: Process completed with exit code 255
         //return res;
     }
@@ -358,8 +373,8 @@ int main(void)
     if (!IEE754_binary32_fuzzing_TEST())
     {
         fflush(stdout); // flush stdout buffer before writing to stderr(unbuffered), to preserve order
+        SLEEP(0.010);
         fprintf(stderr, RED "[ERROR]" NC ": IEE754_binary32_fuzzing_TEST() failed!\n");
-        fflush(stderr);
         res = -1; // Error: Process completed with exit code 255
         //return res;
     }
@@ -372,8 +387,8 @@ int main(void)
     if (!IEE754_binary64_special_cases_TEST())
     {
         fflush(stdout); // flush stdout buffer before writing to stderr(unbuffered), to preserve order
+        SLEEP(0.010);
         fprintf(stderr, RED "[ERROR]" NC ": IEE754_binary64_special_cases_TEST() failed!\n");
-        fflush(stderr);
         res = -1; // Error: Process completed with exit code 255
         //return res;
     }
@@ -386,8 +401,8 @@ int main(void)
     if (!IEE754_binary64_fuzzing_TEST())
     {
         fflush(stdout); // flush stdout buffer before writing to stderr(unbuffered), to preserve order
+        SLEEP(0.010);
         fprintf(stderr, RED "[ERROR]" NC ": IEE754_binary64_fuzzing_TEST() failed!\n");
-        fflush(stderr);
         res = -1; // Error: Process completed with exit code 255
         //return res;
     }
