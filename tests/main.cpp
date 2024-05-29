@@ -345,6 +345,7 @@ int main(void)
     {
         fflush(stdout); // flush stdout buffer before writing to stderr(unbuffered), to preserve order
         fprintf(stderr, RED "[ERROR]" NC ": IEE754_binary32_special_cases_TEST() failed!\n");
+        fflush(stderr);
         res = -1; // Error: Process completed with exit code 255
         //return res;
     }
@@ -358,6 +359,7 @@ int main(void)
     {
         fflush(stdout); // flush stdout buffer before writing to stderr(unbuffered), to preserve order
         fprintf(stderr, RED "[ERROR]" NC ": IEE754_binary32_fuzzing_TEST() failed!\n");
+        fflush(stderr);
         res = -1; // Error: Process completed with exit code 255
         //return res;
     }
@@ -371,6 +373,7 @@ int main(void)
     {
         fflush(stdout); // flush stdout buffer before writing to stderr(unbuffered), to preserve order
         fprintf(stderr, RED "[ERROR]" NC ": IEE754_binary64_special_cases_TEST() failed!\n");
+        fflush(stderr);
         res = -1; // Error: Process completed with exit code 255
         //return res;
     }
@@ -384,6 +387,7 @@ int main(void)
     {
         fflush(stdout); // flush stdout buffer before writing to stderr(unbuffered), to preserve order
         fprintf(stderr, RED "[ERROR]" NC ": IEE754_binary64_fuzzing_TEST() failed!\n");
+        fflush(stderr);
         res = -1; // Error: Process completed with exit code 255
         //return res;
     }
