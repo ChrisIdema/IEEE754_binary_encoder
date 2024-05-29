@@ -21,6 +21,7 @@ Signaling NaN is turned to quiet NaN. Payloads of NaN are not preserved. Signbit
 
 Todo
 ----
+* endianness setting (right now it is big endian)
 * add shortcut for platforms that have known binary format and endianness
 * implement arbitrary floating point size (custom mantissa and exponent sizes, but smaller than double)
 * NaN payload? Who uses that?
