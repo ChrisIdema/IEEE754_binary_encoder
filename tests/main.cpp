@@ -8,6 +8,8 @@
 #include <cstdlib> // rand
 #include <cstring> // memcmp
 
+using namespace std; // for std::isnan, needed in gcc
+
 #define RED   "\033[0;31m"
 #define GREEN "\033[0;32m"
 #define NC    "\033[0m"
@@ -331,6 +333,8 @@ bool IEE754_binary64_fuzzing_TEST()
     
     return success;
 }
+
+
 int main(void)
 {
     int res = 0;
