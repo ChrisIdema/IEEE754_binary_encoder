@@ -1,5 +1,5 @@
 # IEEE754_binary_encoder
-[![build and test](https://github.com/ChrisIdema/IEEE754_binary_encoder/actions/workflows/build.yml/badge.svg?branch=unit_tests)](https://github.com/ChrisIdema/IEEE754_binary_encoder/actions/workflows/build.yml)
+[![build and test](https://github.com/ChrisIdema/IEEE754_binary_encoder/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/ChrisIdema/IEEE754_binary_encoder/actions/workflows/build.yml)
 
 A portable C library for serializing/deserializing float and double values.
 Uses standard functions instead of making assumptions about the platform's binary format (endianness etc.)
