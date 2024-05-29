@@ -1,4 +1,6 @@
 # IEEE754_binary_encoder
+[![build and test](https://github.com/ChrisIdema/IEEE754_binary_encoder/actions/workflows/build.yml/badge.svg?branch=unit_tests)](https://github.com/ChrisIdema/IEEE754_binary_encoder/actions/workflows/build.yml)
+
 A C library for converting float and double values to binary
 
 Functions
