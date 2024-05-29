@@ -1,7 +1,8 @@
+#include "IEEE754_binary_encoder.h"
+
 #include <cstdio>
 #include <cstdint>
 
-#include "IEEE754_binary_encoder.h"
 #include <float.h>
 
 #define RED   "\033[0;31m"
