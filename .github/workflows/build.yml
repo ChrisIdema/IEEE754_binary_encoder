@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'unit_tests'
+      - 'master'
 
 jobs:
   build-and-run:
