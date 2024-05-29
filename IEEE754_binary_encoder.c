@@ -44,7 +44,7 @@ void IEE754_float64_encode( double x, uint8_t out[8] )
 
 			int e = 0;
 			double dfraction = frexp( x, &e );
-			fraction = dfraction * (1ULL << (e + (DBL_MAX_EXP-2) + (DBL_MANT_DIG-1)));
+			fraction = (uint64_t)(dfraction * (1ULL << (e + (DBL_MAX_EXP-2) + (DBL_MANT_DIG-1))));
 		}
 	}
 	else
@@ -55,20 +55,20 @@ void IEE754_float64_encode( double x, uint8_t out[8] )
 		}
 
 		int e = 0;
-		fraction = frexp( x, &e ) * ((uint64_t)1uLL<<DBL_MANT_DIG);
-		exponent = e + (DBL_MAX_EXP-2);
+		fraction = (uint64_t)(frexp( x, &e ) * ((uint64_t)1uLL<<DBL_MANT_DIG));
+		exponent = (uint16_t)(e + (DBL_MAX_EXP-2));
   	}
 
-	out[0] = (( sign << 7 ) & 0x80) |
-			 (( exponent >> 4) & 0x7F);
-	out[1] =  exponent << 4 |
-			 (fraction >> (8*6)) & 0x0F ;
-	out[2] =  fraction >> (8*5);
-    out[3] =  fraction >> (8*4);
-	out[4] =  fraction >> (8*3);
-	out[5] =  fraction >> (8*2);
-	out[6] =  fraction >> (8*1);
-	out[7] =  fraction >> (8*0);
+	out[0] = ((sign << 7) & 0x80) |
+			 ((exponent >> 4) & 0x7F);
+	out[1] = ((exponent << 4) & 0xF0) |
+			((fraction >> (8*6)) & 0x0F) ;
+	out[2] = (fraction >> (8*5)) & 0xFF;
+	out[3] = (fraction >> (8*4)) & 0xFF;
+	out[4] = (fraction >> (8*3)) & 0xFF;
+	out[5] = (fraction >> (8*2)) & 0xFF;
+	out[6] = (fraction >> (8*1)) & 0xFF;
+	out[7] = (fraction >> (8*0)) & 0xFF;
 }
 
 double IEE754_float64_decode( uint8_t out[8] )
@@ -90,7 +90,7 @@ double IEE754_float64_decode( uint8_t out[8] )
   	{
 		if (fraction != 0) // non-zero subnormal number
 		{
-			dfraction = fraction;
+			dfraction = (double)fraction;
 			exponent -= (DBL_MAX_EXP-2) + (DBL_MANT_DIG-1);
 		}
 		else
@@ -159,8 +159,8 @@ void IEE754_float32_encode( float x, uint8_t out[4] )
 			exponent = 0;
 
 			int e = 0;
-			float ffraction = frexp( x, &e );
-			fraction = ffraction * (1ULL << (e + (FLT_MAX_EXP-2) + (FLT_MANT_DIG-1)));
+			float ffraction = frexpf( x, &e );
+			fraction = (uint32_t)(ffraction * (1ULL << (e + (FLT_MAX_EXP-2) + (FLT_MANT_DIG-1))));
 		}
 	}
 	else
@@ -171,8 +171,8 @@ void IEE754_float32_encode( float x, uint8_t out[4] )
 		}
 
 		int e = 0;
-		fraction = frexp( x, &e ) * ((uint32_t)1<<FLT_MANT_DIG);
-		exponent = e + (FLT_MAX_EXP-2);
+		fraction = (uint32_t)(frexp( x, &e ) * ((uint32_t)1<<FLT_MANT_DIG));
+		exponent = (uint8_t)(e + (FLT_MAX_EXP-2));
 		if( e + (FLT_MAX_EXP-2) > ((1<<8)-1) )
 		{
 			exponent = ((1<<8)-1);
@@ -203,7 +203,7 @@ float IEE754_float32_decode( uint8_t out[4] )
   	{
 		if (fraction != 0) // non-zero subnormal number
 		{
-			ffraction = fraction;
+			ffraction = (float)fraction;
 			exponent -= (FLT_MAX_EXP-2) + (FLT_MANT_DIG-1);
 		}
 		else

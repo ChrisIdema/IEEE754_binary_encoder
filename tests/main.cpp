@@ -25,10 +25,10 @@ using namespace std; // for std::isnan, needed in gcc
 
 #if defined(_MSC_VER)
 // Sleep() expects an argument in milliseconds
-#define SLEEP(time) Sleep((time) * 1000)
+#define SLEEP(time) Sleep((DWORD)((time) * 1000))
 #else
 // sleep() expects an argument in seconds so use usleep
-#define SLEEP(time) usleep((time) * 1000000)
+#define SLEEP(time) usleep((useconds_t)((time) * 1000000))
 #endif
 
 
@@ -70,7 +70,7 @@ return 	((uint32_t)(rand() & 0x0003)) << 30 |
 static uint16_t rand15()
 {
 	//RAND_MAX is at least 32767
-	return 	rand() & 0x7FFF;
+	return 	(uint16_t)(rand() & 0x7FFF);
 }
 
 static void print_byte_array(const uint8_t* buffer, size_t size, bool line_ending)
@@ -143,7 +143,7 @@ bool IEE754_float32_fuzzing_TEST()
     srand(0);
     for(int i = 0; i < 1000; ++i)
     {
-        int16_t exponent = rand15() % (1<<8);
+        uint8_t exponent = rand15() % (1<<8);
         //printf("exponent=%d\n", exponent);
 
         //exponent = 255; // test NaN
@@ -157,8 +157,8 @@ bool IEE754_float32_fuzzing_TEST()
                     ((exponent >>  1) & 0x7F);
         buffer[1] = ((exponent <<  7) & 0x80) |
                     ((fraction >> 16) & 0x7F);
-        buffer[2] =  (fraction >>  8);
-        buffer[3] =  (fraction >>  0);
+        buffer[2] =  (fraction >>  8) & 0xFF;
+        buffer[3] =  (fraction >>  0) & 0xFF;
 
 
         float f = IEE754_float32_decode(buffer);
@@ -264,7 +264,7 @@ bool IEE754_float64_fuzzing_TEST()
     srand(0);
     for(int i = 0; i < 10000; ++i)
     {
-        int16_t exponent = rand15() % (1<<11);
+        uint16_t exponent = rand15() % (1<<11);
 
         //exponent = 2047; // test NaN
 
@@ -272,16 +272,16 @@ bool IEE754_float64_fuzzing_TEST()
 
         sign = rand15() & 1;
 
-        buffer[0] = (( sign << 7 ) & 0x80) |
-                    (( exponent >> 4) & 0x7F);
-        buffer[1] =  exponent << 4 |
-                    (fraction >> (8*6)) & 0x0F;
-        buffer[2] =  fraction >> (8*5);
-        buffer[3] =  fraction >> (8*4);
-        buffer[4] =  fraction >> (8*3);
-        buffer[5] =  fraction >> (8*2);
-        buffer[6] =  fraction >> (8*1);
-        buffer[7] =  fraction >> (8*0);
+        buffer[0] = ((sign << 7) & 0x80) |
+                    ((exponent >> 4) & 0x7F);
+        buffer[1] = ((exponent << 4) & 0xF0) |
+                    ((fraction >> (8*6)) & 0x0F) ;
+        buffer[2] = (fraction >> (8*5)) & 0xFF;
+        buffer[3] = (fraction >> (8*4)) & 0xFF;
+        buffer[4] = (fraction >> (8*3)) & 0xFF;
+        buffer[5] = (fraction >> (8*2)) & 0xFF;
+        buffer[6] = (fraction >> (8*1)) & 0xFF;
+        buffer[7] = (fraction >> (8*0)) & 0xFF;
 
 
         double d = IEE754_float64_decode(buffer);
