@@ -179,7 +179,7 @@ bool IEE754_binary32_fuzzing_TEST()
             if (!compare)
             {					
                 printf("NaN decode failed\n");
-                printf("%g ", f);
+                printf("%g, ", f);
                 print_byte_array(buffer, sizeof(buffer), true);
             }
             else
@@ -240,14 +240,9 @@ bool IEE754_binary64_special_cases_TEST()
         do
         {
             in = sign ? -in_array[i] : in_array[i];
-            //printf("\n%lg\n",in);
-            //const uint64_t* ptr = (const uint64_t*)&in;
-            //printf("%016llX\n",*ptr);
-            IEE754_binary64_encode(in, buffer);          
-            //print_byte_array(buffer, sizeof(buffer), true);       
+            IEE754_binary64_encode(in, buffer);           
             out = IEE754_binary64_decode(buffer);
             compare = float64_strict_compare(in, out);
-            //printf("%g %c= %g\n", out, compare ? '=' : '!' , in );
             printf("%+.*g %c= %+.*g\n", DBL_DECIMAL_DIG, out, compare ? '=' : '!' , DBL_DECIMAL_DIG, in );
             success = success && compare;   
             sign = !sign; 		
@@ -270,12 +265,10 @@ bool IEE754_binary64_fuzzing_TEST()
     for(int i = 0; i < 10000; ++i)
     {		
         int16_t exponent = rand15() % (1<<11);
-        //printf("exponent=%d\n", exponent);
 
         //exponent = 2047; // test NaN
 
         uint64_t fraction = rand64() % (1ULL<<(DBL_MANT_DIG-1));
-        //printf("fraction=%llu\n", fraction);
 
         sign = rand15() & 1;
     
@@ -309,7 +302,7 @@ bool IEE754_binary64_fuzzing_TEST()
             if (!compare)
             {					
                 printf("NaN decode failed\n");
-                printf("%lg ", d);
+                printf("%lg, ", d);
                
                 print_byte_array(buffer, sizeof(buffer), true);
             }
